@@ -2,6 +2,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,11 @@ public class ForecastAdapter extends CursorAdapter {
 
     // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
-
+    AnimationDrawable animation;
     /**
      * Cache of the children views for a forecast list item.
      */
-    public static class ViewHolder {
+        public static class ViewHolder {
         public final ImageView iconView;
         public final TextView dateView;
         public final TextView descriptionView;
@@ -102,7 +103,9 @@ public class ForecastAdapter extends CursorAdapter {
 
         // For accessibility, add a content description to the icon field
         viewHolder.iconView.setContentDescription(description);
-
+        viewHolder.iconView.setBackgroundResource(R.drawable.animation);
+        animation = (AnimationDrawable) viewHolder.iconView.getBackground();
+        animation.start();
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
 
