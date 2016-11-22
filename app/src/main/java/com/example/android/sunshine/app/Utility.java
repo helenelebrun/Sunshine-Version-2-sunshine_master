@@ -17,6 +17,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
 
@@ -25,6 +26,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utility {
+
+    private final static int COLOR_STORM = Color.rgb(0,0,100);
+    private final static int COLOR_LIGHT_RAIN = Color.rgb(10, 10, 100);
+    private final static int COLOR_RAIN = Color.rgb(100,100,100);
+    private final static int COLOR_SNOW = Color.rgb(120, 120, 120);
+    private final static int COLOR_FOG = Color.rgb(130, 130, 130);
+    private final static int COLOR_LIGHT_CLOUDS = Color.rgb(140, 140, 140);
+    private final static int COLOR_CLOUDS = Color.rgb(150, 150, 150);
+    private final static int COLOR_CLEAR = Color.rgb(160, 160, 160);
+
+
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_location_key),
@@ -243,6 +255,34 @@ public class Utility {
             return R.drawable.art_light_clouds;
         } else if (weatherId >= 802 && weatherId <= 804) {
             return R.drawable.art_clouds;
+        }
+        return -1;
+    }
+
+    public static int getBackgroundColorForWeatherCondition(int weatherId){
+
+        if (weatherId >= 200 && weatherId <= 232) {
+            return COLOR_STORM;
+        } else if (weatherId >= 300 && weatherId <= 321) {
+            return COLOR_LIGHT_RAIN;
+        } else if (weatherId >= 500 && weatherId <= 504) {
+            return COLOR_RAIN;
+        } else if (weatherId == 511) {
+            return COLOR_SNOW;
+        } else if (weatherId >= 520 && weatherId <= 531) {
+            return COLOR_RAIN;
+        } else if (weatherId >= 600 && weatherId <= 622) {
+            return COLOR_SNOW;
+        } else if (weatherId >= 701 && weatherId <= 761) {
+            return COLOR_FOG;
+        } else if (weatherId == 761 || weatherId == 781) {
+            return COLOR_STORM;
+        } else if (weatherId == 800) {
+            return COLOR_CLEAR;
+        } else if (weatherId == 801) {
+            return COLOR_LIGHT_CLOUDS;
+        } else if (weatherId >= 802 && weatherId <= 804) {
+            return COLOR_CLOUDS;
         }
         return -1;
     }

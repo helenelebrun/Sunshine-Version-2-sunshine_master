@@ -91,6 +91,8 @@ public class ForecastAdapter extends CursorAdapter {
             }
         }
 
+        view.setBackgroundColor(Utility.getBackgroundColorForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         // Find TextView and set formatted date on it
