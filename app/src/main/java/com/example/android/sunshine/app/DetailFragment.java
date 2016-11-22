@@ -149,7 +149,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onLocationChanged( String newLocation ) {
+    void onLocationChanged(String newLocation ) {
         // replace the uri, since the location has changed
         Uri uri = mUri;
         if (null != uri) {
@@ -237,4 +237,5 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }
+
 }

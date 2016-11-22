@@ -18,7 +18,6 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
+
+
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -105,6 +109,17 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             mLocation = location;
         }
     }
+
+    @Override
+    protected  void onRestart()
+    {
+        super.onRestart();
+        ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        if ( null != ff ) {
+            ff.onDataChanged();
+        }
+    }
+
 
     @Override
     public void onItemSelected(Uri contentUri) {

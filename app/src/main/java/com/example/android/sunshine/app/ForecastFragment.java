@@ -82,6 +82,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
 
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -174,6 +175,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         return rootView;
     }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -271,4 +273,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
         }
     }
+
+    public void onDataChanged() {
+        mForecastAdapter.notifyDataSetChanged();
+    }
+
 }
