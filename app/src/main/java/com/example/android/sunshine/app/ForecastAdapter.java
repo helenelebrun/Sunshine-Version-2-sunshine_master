@@ -80,7 +80,7 @@ public class ForecastAdapter extends CursorAdapter {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
                 int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
-                viewHolder.iconView.setImageResource(id_image);
+                //viewHolder.iconView.setImageResource(id_image);
                 //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
                 //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 viewHolder.iconView.setBackgroundResource(id_image);
@@ -93,7 +93,7 @@ public class ForecastAdapter extends CursorAdapter {
                 //viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
                 //       cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
-                viewHolder.iconView.setImageResource(id_image);
+                //viewHolder.iconView.setImageResource(id_image);
                 //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
                 //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 viewHolder.iconView.setBackgroundResource(id_image);
