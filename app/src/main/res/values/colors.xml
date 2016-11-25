@@ -10,4 +10,13 @@
     <color name="sunshine_blue">#ff1ca8f4</color>
     <color name="sunshine_dark_blue">#0288D1</color>
 
+    <color name="weather_light_rain">#c2d7e3</color>
+    <color name="weather_storm">#115071</color>
+    <color name="weather_rain">#508bab</color>
+    <color name="weather_snow">#f5f7f7</color>
+    <color name="weather_fog">#b7b9ba</color>
+    <color name="weather_light_clouds">#ccd1d4</color>
+    <color name="weather_clouds">#626262</color>
+    <color name="weather_clear">#f7f382</color>
+
 </resources>

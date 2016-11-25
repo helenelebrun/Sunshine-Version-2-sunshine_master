@@ -27,16 +27,6 @@ import java.util.Date;
 
 public class Utility {
 
-    private final static int COLOR_STORM = Color.rgb(0,0,100);
-    private final static int COLOR_LIGHT_RAIN = Color.rgb(10, 10, 100);
-    private final static int COLOR_RAIN = Color.rgb(100,100,100);
-    private final static int COLOR_SNOW = Color.rgb(120, 120, 120);
-    private final static int COLOR_FOG = Color.rgb(130, 130, 130);
-    private final static int COLOR_LIGHT_CLOUDS = Color.rgb(140, 140, 140);
-    private final static int COLOR_CLOUDS = Color.rgb(150, 150, 150);
-    private final static int COLOR_CLEAR = Color.rgb(160, 160, 160);
-
-
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         return prefs.getString(context.getString(R.string.pref_location_key),
@@ -273,27 +263,27 @@ public class Utility {
     public static int getBackgroundColorForWeatherCondition(int weatherId){
 
         if (weatherId >= 200 && weatherId <= 232) {
-            return COLOR_STORM;
+            return R.color.weather_storm;
         } else if (weatherId >= 300 && weatherId <= 321) {
-            return COLOR_LIGHT_RAIN;
+            return R.color.weather_light_rain;
         } else if (weatherId >= 500 && weatherId <= 504) {
-            return COLOR_RAIN;
+            return R.color.weather_rain;
         } else if (weatherId == 511) {
-            return COLOR_SNOW;
+            return R.color.weather_snow;
         } else if (weatherId >= 520 && weatherId <= 531) {
-            return COLOR_RAIN;
+            return R.color.weather_rain;
         } else if (weatherId >= 600 && weatherId <= 622) {
-            return COLOR_SNOW;
+            return R.color.weather_snow;
         } else if (weatherId >= 701 && weatherId <= 761) {
-            return COLOR_FOG;
+            return R.color.weather_fog;
         } else if (weatherId == 761 || weatherId == 781) {
-            return COLOR_STORM;
+            return R.color.weather_storm;
         } else if (weatherId == 800) {
-            return COLOR_CLEAR;
+            return R.color.weather_clear;
         } else if (weatherId == 801) {
-            return COLOR_LIGHT_CLOUDS;
+            return R.color.weather_light_clouds;
         } else if (weatherId >= 802 && weatherId <= 804) {
-            return COLOR_CLOUDS;
+            return R.color.weather_clouds;
         }
         return -1;
     }
