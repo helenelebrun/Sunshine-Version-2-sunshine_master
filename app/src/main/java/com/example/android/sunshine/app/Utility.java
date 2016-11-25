@@ -287,4 +287,20 @@ public class Utility {
         }
         return -1;
     }
+
+    public static int getBackgroundColor(int compteur){
+
+        int id_color = 0;
+
+        if (compteur == 0) {
+            id_color = R.color.color3;
+        } else if (compteur == 1) {
+            id_color = R.color.color1;
+        } else if (compteur == 2) {
+            id_color = R.color.color2;
+        } else if (compteur == 3) {
+            id_color = R.color.color0;
+        }
+        return id_color;
+    }
 }

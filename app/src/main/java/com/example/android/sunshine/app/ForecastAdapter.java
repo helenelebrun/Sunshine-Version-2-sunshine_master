@@ -2,6 +2,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
@@ -23,10 +24,13 @@ public class ForecastAdapter extends CursorAdapter {
     // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
     AnimationDrawable animation;
+
+    private static int compteur = 0;
+
     /**
      * Cache of the children views for a forecast list item.
      */
-        public static class ViewHolder {
+    public static class ViewHolder {
         public final ImageView iconView;
         public final TextView dateView;
         public final TextView descriptionView;
@@ -76,34 +80,30 @@ public class ForecastAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
         int viewType = getItemViewType(cursor.getPosition());
+        int color = -1;
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
                 int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
-                //viewHolder.iconView.setImageResource(id_image);
-                //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-                //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 viewHolder.iconView.setBackgroundResource(id_image);
                 animation = (AnimationDrawable) viewHolder.iconView.getBackground();
                 animation.start();
+                color = Utility.getBackgroundColor(3);
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
                 // Get weather icon
-                //viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-                //       cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
                 int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
-                //viewHolder.iconView.setImageResource(id_image);
-                //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-                //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                //viewHolder.iconView.setImageResource(R.mipmap.ic_ombre_rose);
+
                 viewHolder.iconView.setBackgroundResource(id_image);
                 animation = (AnimationDrawable) viewHolder.iconView.getBackground();
                 animation.start();
+                color = Utility.getBackgroundColor(cursor.getPosition()%3);
                 break;
             }
         }
-
-        view.setBackgroundColor(Utility.getBackgroundColorForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+        view.setBackgroundResource(color);
 
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
