@@ -79,14 +79,26 @@ public class ForecastAdapter extends CursorAdapter {
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
-                viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
+                viewHolder.iconView.setImageResource(id_image);
+                //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
+                //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                viewHolder.iconView.setBackgroundResource(id_image);
+                animation = (AnimationDrawable) viewHolder.iconView.getBackground();
+                animation.start();
                 break;
             }
             case VIEW_TYPE_FUTURE_DAY: {
                 // Get weather icon
-                viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
-                        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                //viewHolder.iconView.setImageResource(Utility.getIconResourceForWeatherCondition(
+                //       cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
+                viewHolder.iconView.setImageResource(id_image);
+                //viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(
+                //        cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID)));
+                viewHolder.iconView.setBackgroundResource(id_image);
+                animation = (AnimationDrawable) viewHolder.iconView.getBackground();
+                animation.start();
                 break;
             }
         }
@@ -105,9 +117,7 @@ public class ForecastAdapter extends CursorAdapter {
 
         // For accessibility, add a content description to the icon field
         viewHolder.iconView.setContentDescription(description);
-        viewHolder.iconView.setBackgroundResource(R.drawable.animation);
-        animation = (AnimationDrawable) viewHolder.iconView.getBackground();
-        animation.start();
+
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
 
