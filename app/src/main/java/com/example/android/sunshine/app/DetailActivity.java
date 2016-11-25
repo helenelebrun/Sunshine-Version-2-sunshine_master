@@ -17,6 +17,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -24,6 +25,8 @@ import android.view.MenuItem;
 
 
 public class DetailActivity extends AppCompatActivity {
+
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class DetailActivity extends AppCompatActivity {
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.weather_detail_container, fragment)
+                    .add (R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -64,5 +67,20 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected  void onRestart()
+    {
+        super.onRestart();
+
+        DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+
+        if ( null != df ) {
+            final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.detach(df);
+            ft.attach(df);
+            ft.commit();
+        }
     }
 }

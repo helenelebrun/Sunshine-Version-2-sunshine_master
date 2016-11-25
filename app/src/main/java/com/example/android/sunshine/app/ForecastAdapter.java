@@ -24,9 +24,6 @@ public class ForecastAdapter extends CursorAdapter {
     // Flag to determine if we want to use a separate view for "today".
     private boolean mUseTodayLayout = true;
     AnimationDrawable animation;
-
-    private static int compteur = 0;
-
     /**
      * Cache of the children views for a forecast list item.
      */
@@ -103,8 +100,10 @@ public class ForecastAdapter extends CursorAdapter {
                 break;
             }
         }
-        view.setBackgroundResource(color);
 
+        int id_color = Utility.getBackgroundColorForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
+
+        view.setBackgroundResource(id_color);
         // Read date from cursor
         long dateInMillis = cursor.getLong(ForecastFragment.COL_WEATHER_DATE);
         // Find TextView and set formatted date on it
