@@ -81,6 +81,6 @@
         android:layout_height="5dp"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
-        android:background="#fffffff0" />
+        android:background="#fffff0" />
 
 </LinearLayout>

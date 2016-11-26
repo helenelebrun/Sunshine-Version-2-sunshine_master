@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@color/color0">
 
         <!-- Header: Day, Date -->
         <TextView
@@ -17,7 +18,7 @@
             android:id="@+id/detail_day_textview"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="24sp" />
 
         <TextView
@@ -25,7 +26,7 @@
             android:id="@+id/detail_date_textview"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textColor="@color/grey_700"
+            android:textColor="@color/grey"
             android:textSize="16sp" />
 
         <!-- Main content: high, low, art, weather state -->
@@ -47,6 +48,7 @@
                     android:id="@+id/detail_high_textview"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:textColor="@color/white"
                     android:textSize="96sp" />
 
                 <TextView
@@ -54,7 +56,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/grey_700"
+                    android:textColor="@color/grey"
                     android:textSize="48sp" />
             </LinearLayout>
 
@@ -67,15 +69,15 @@
 
                 <ImageView
                     android:id="@+id/detail_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="@dimen/forecast_today_icon"
+                    android:layout_height="@dimen/forecast_today_icon" />
 
                 <TextView
                     android:id="@+id/detail_forecast_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:textAppearanceLarge"
-                    android:textColor="@color/grey_700" />
+                    android:textColor="@color/grey" />
             </LinearLayout>
         </LinearLayout>
 
@@ -91,6 +93,7 @@
                 android:id="@+id/detail_humidity_textview"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:textAppearance="?android:textAppearanceLarge" />
 
             <TextView
@@ -98,6 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:textAppearance="?android:textAppearanceLarge" />
 
             <TextView
@@ -105,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:textAppearance="?android:textAppearanceLarge" />
         </LinearLayout>
     </LinearLayout>

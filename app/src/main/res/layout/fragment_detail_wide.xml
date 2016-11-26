@@ -8,7 +8,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:padding="16dp" >
+        android:padding="16dp"
+        android:background="@color/color0">
 
         <LinearLayout
             android:layout_height="wrap_content"
