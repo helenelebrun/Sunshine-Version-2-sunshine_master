@@ -17,6 +17,7 @@ package com.example.android.sunshine.app;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -184,7 +185,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
             // Use weather art image
-            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+            mIconView.setBackgroundResource(Utility.getArtResourceForWeatherCondition(weatherId));
+            AnimationDrawable animation = (AnimationDrawable) mIconView.getBackground();
+            animation.start();
 
             // Read date from cursor and update views for day of week and date
             long date = data.getLong(COL_WEATHER_DATE);
