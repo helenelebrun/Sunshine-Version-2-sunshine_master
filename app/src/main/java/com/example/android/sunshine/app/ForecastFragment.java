@@ -36,6 +36,9 @@ import android.widget.ListView;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
@@ -82,6 +85,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
 
+    List<Temperature> temperatures = new ArrayList<>();
 
     /**
      * A callback interface that all activities containing this fragment must
@@ -148,6 +152,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 // CursorAdapter returns a cursor at the correct position for getItem(), or null
                 // if it cannot seek to that position.
+
+                temperatures = getTemperatureList(position);
+
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {
                     String locationSetting = Utility.getPreferredLocation(getActivity());
@@ -176,6 +183,36 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         return rootView;
     }
 
+    public List<Temperature> getTemperatureList(int position) {
+
+        List<Cursor> cursors = new ArrayList<>();
+
+        int indiceDebut;
+        int indiceFin;
+        if (position < 7) {
+            indiceDebut = 0;
+            indiceFin = 7;
+        } else {
+            indiceDebut = 7;
+            indiceFin = mListView.getCount();
+        }
+
+        List<Temperature> temp = new ArrayList<>();
+
+        for (int i = indiceDebut, j = 0; i < indiceFin; i++, j++) {
+            cursors.add((Cursor) mListView.getItemAtPosition(i));
+
+            temp.add(new Temperature());
+
+            temp.get(j).weatherId = cursors.get(j).getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
+            temp.get(j).date = cursors.get(j).getLong(ForecastFragment.COL_WEATHER_DATE);
+            temp.get(j).description = cursors.get(j).getString(ForecastFragment.COL_WEATHER_DESC);
+            temp.get(j).high = cursors.get(j).getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
+            temp.get(j).low = cursors.get(j).getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+        }
+
+        return temp;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
