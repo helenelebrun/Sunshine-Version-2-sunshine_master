@@ -43,6 +43,9 @@ import android.widget.TextView;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -99,6 +102,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mPressureView;
     private RelativeLayout graphic;
 
+    private List<Temperature> maListe;
+
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -124,8 +129,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
 
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
-
         graphic.addView(new Rectangle(getActivity()));
+
+        maListe = DetailActivity.getMaListe();
 
         return rootView;
     }
@@ -261,10 +267,32 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         @Override
         public void onDraw(Canvas canvas) {
-            paint.setColor(Color.GREEN);
-            paint.setStyle(Paint.Style.STROKE);
-            //Rect rect = new Rect(20, 56, 200, 112);
-            canvas.drawLine(0, 0, 1000, 1000, paint);
+
+            //canvas.drawLine(startX, startY, stopX, stopY, paint);
+            int graphicHeight = graphic.getHeight();
+            int graphicWidth = graphic.getWidth();
+
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(10f);
+
+            canvas.drawLine(0, 0, 0, graphicHeight, paint);
+            canvas.drawLine(0, graphicHeight, graphicWidth, graphicHeight, paint);
+
+            paint.setColor(Color.LTGRAY);
+            paint.setStrokeWidth(5f);
+
+            float xLine = graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            xLine += graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            xLine += graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            xLine += graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            xLine += graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            xLine += graphicWidth/7;
+            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
         }
     }
 }

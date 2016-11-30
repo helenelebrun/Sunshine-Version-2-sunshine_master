@@ -23,10 +23,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class DetailActivity extends AppCompatActivity {
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    private static List<Temperature> maListe = new ArrayList<>();
+
+    public static List<Temperature> getMaListe() {
+        return maListe;
+    }
+
+    public void setMaListe(List<Temperature> liste) {
+        maListe = liste;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +59,9 @@ public class DetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add (R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
+
+            Bundle extras = getIntent().getExtras();
+            setMaListe(extras.<Temperature>getParcelableArrayList("listTemp"));
         }
     }
 

@@ -43,6 +43,12 @@ import java.util.List;
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 public class ForecastFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static List<Temperature> maListe = new ArrayList<>();
+
+    public static List<Temperature> getMaListe() {
+        return maListe;
+    }
+
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
@@ -107,6 +113,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+
+        maListe = new ArrayList<>();
     }
 
     @Override
@@ -154,6 +162,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
                 // if it cannot seek to that position.
 
                 temperatures = getTemperatureList(position);
+                maListe = temperatures;
 
                 Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
                 if (cursor != null) {

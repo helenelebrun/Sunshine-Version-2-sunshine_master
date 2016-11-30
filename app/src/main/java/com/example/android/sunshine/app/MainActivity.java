@@ -154,6 +154,9 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
             //intent.putParcelableArrayListExtra("CursorList", cursors);
 
+            List<Temperature> liste = ForecastFragment.getMaListe();
+            intent.putParcelableArrayListExtra("listTemp", (ArrayList<? extends Parcelable>) liste);
+
             startActivity(intent);
         }
     }
