@@ -4,8 +4,15 @@
     android:layout_height="match_parent">
 
     <EditTextPreference
-        android:title="@string/pref_location_label"
-        android:key="@string/pref_location_key"
+        android:title="@string/pref_latitude_label"
+        android:key="@string/pref_latitude_key"
+        android:defaultValue="@string/pref_location_default"
+        android:inputType="text"
+        android:singleLine="true" />
+
+    <EditTextPreference
+        android:title="@string/pref_longitude_label"
+        android:key="@string/pref_longitude_key"
         android:defaultValue="@string/pref_location_default"
         android:inputType="text"
         android:singleLine="true" />

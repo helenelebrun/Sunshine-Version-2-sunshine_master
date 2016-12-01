@@ -17,6 +17,7 @@ package com.example.android.sunshine.app.data;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.format.Time;
