@@ -17,14 +17,19 @@ package com.example.android.sunshine.app;
 
 import android.content.Intent;
 import android.location.Location;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
@@ -142,8 +147,17 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
                     .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
                     .commit();
         } else {
+
+            //List<Cursor> cursors = ForecastFragment.cursors;
+
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
+
+            //intent.putParcelableArrayListExtra("CursorList", cursors);
+
+            List<Temperature> liste = ForecastFragment.getMaListe();
+            intent.putParcelableArrayListExtra("listTemp", (ArrayList<? extends Parcelable>) liste);
+
             startActivity(intent);
         }
     }

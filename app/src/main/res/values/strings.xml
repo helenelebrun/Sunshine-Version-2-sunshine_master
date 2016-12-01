@@ -99,5 +99,7 @@
     <string name="pref_latitude_key">latitude</string>
     <string name="pref_longitude_label">Longitude</string>
     <string name="pref_longitude_key">longitude</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
