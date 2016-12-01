@@ -39,11 +39,11 @@ public class Utility {
 
         double longitude = Double.parseDouble(
                 prefs.getString(context.getString(R.string.pref_longitude_key),
-                        context.getString(R.string.pref_longitude_label)));
+                        context.getString(R.string.pref_longitude_default)));
 
         double latitude =  Double.parseDouble(
                 prefs.getString(context.getString(R.string.pref_latitude_key),
-                        context.getString(R.string.pref_latitude_label)));
+                        context.getString(R.string.pref_latitude_default)));
 
         Location location = new Location("");
         location.setLongitude(longitude);
