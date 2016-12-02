@@ -2,7 +2,6 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
@@ -33,8 +32,10 @@ public class ForecastAdapter extends CursorAdapter {
         public final TextView descriptionView;
         public final TextView highTempView;
         public final TextView lowTempView;
+        public final TextView cityView;
 
         public ViewHolder(View view) {
+            cityView = (TextView) view.findViewById(R.id.list_item_city_textview);
             iconView = (ImageView) view.findViewById(R.id.list_item_icon);
             dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
             descriptionView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
@@ -81,6 +82,8 @@ public class ForecastAdapter extends CursorAdapter {
         switch (viewType) {
             case VIEW_TYPE_TODAY: {
                 // Get weather icon
+                String cityName = cursor.getString(ForecastFragment.COL_CITY_NAME);
+                viewHolder.cityView.setText(cityName);
                 int id_image = Utility.getArtResourceForWeatherCondition(cursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID));
                 viewHolder.iconView.setBackgroundResource(id_image);
                 animation = (AnimationDrawable) viewHolder.iconView.getBackground();

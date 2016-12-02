@@ -76,7 +76,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             WeatherEntry.COLUMN_WEATHER_ID,
             // This works because the WeatherProvider returns location data joined with
             // weather data, even though they're stored in two different tables.
-            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING
+            WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING,
+            WeatherContract.LocationEntry.COLUMN_CITY_NAME
     };
 
     // These indices are tied to DETAIL_COLUMNS.  If DETAIL_COLUMNS changes, these
@@ -91,8 +92,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public static final int COL_WEATHER_WIND_SPEED = 7;
     public static final int COL_WEATHER_DEGREES = 8;
     public static final int COL_WEATHER_CONDITION_ID = 9;
+    public static final int COL_WEATHER_CITY = 11;
 
     private ImageView mIconView;
+    private TextView mCityView;
     private TextView mFriendlyDateView;
     private TextView mDateView;
     private TextView mDescriptionView;
@@ -120,6 +123,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         mIconView = (ImageView) rootView.findViewById(R.id.detail_icon);
+        mCityView = (TextView) rootView.findViewById(R.id.detail_city_textview);
         mDateView = (TextView) rootView.findViewById(R.id.detail_date_textview);
         mFriendlyDateView = (TextView) rootView.findViewById(R.id.detail_day_textview);
         mDescriptionView = (TextView) rootView.findViewById(R.id.detail_forecast_textview);
@@ -207,6 +211,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             AnimationDrawable animation = (AnimationDrawable) mIconView.getBackground();
             animation.start();
 
+            String cityName = data.getString(COL_WEATHER_CITY);
+            mCityView.setText(cityName);
             // Read date from cursor and update views for day of week and date
             long date = data.getLong(COL_WEATHER_DATE);
             String friendlyDateText = Utility.getDayName(getActivity(), date);
