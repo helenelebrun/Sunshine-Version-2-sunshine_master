@@ -30,6 +30,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,8 +45,13 @@ import android.widget.TextView;
 import com.example.android.sunshine.app.data.WeatherContract;
 import com.example.android.sunshine.app.data.WeatherContract.WeatherEntry;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -104,9 +110,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mHumidityView;
     private TextView mWindView;
     private TextView mPressureView;
+
     private RelativeLayout graphic;
+    private List<TextView> dates = new ArrayList<>();
+
+    private List<TextView> degresLow = new ArrayList<>();
+    private List<TextView> degresHigh = new ArrayList<>();
 
     private List<Temperature> maListe;
+    private List<Temperature> listGraph;
+
+    private long dateAujourdhui;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -133,10 +147,43 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
 
+        maListe = DetailActivity.getMaListe();
+        listGraph = new ArrayList<>(maListe);
+
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date1));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date2));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date3));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date4));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date5));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date6));
+        dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date7));
+
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre1_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre2_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre3_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre4_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre5_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre6_low));
+        degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_low));
+
+        for (int i = 0; i < degresLow.size(); i++) {
+            degresLow.get(i).setText(String.format("%.1f",listGraph.get(i).low));
+        }
+
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre1_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre2_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre3_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre4_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre5_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre6_high));
+        degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_high));
+
+        for (int i = 0; i < degresHigh.size(); i++) {
+            degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high));
+        }
+
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
         graphic.addView(new Rectangle(getActivity()));
-
-        maListe = DetailActivity.getMaListe();
 
         return rootView;
     }
@@ -214,9 +261,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String cityName = data.getString(COL_WEATHER_CITY);
             mCityView.setText(cityName);
             // Read date from cursor and update views for day of week and date
-            long date = data.getLong(COL_WEATHER_DATE);
-            String friendlyDateText = Utility.getDayName(getActivity(), date);
-            String dateText = Utility.getFormattedMonthDay(getActivity(), date);
+            dateAujourdhui = data.getLong(COL_WEATHER_DATE);
+            String friendlyDateText = Utility.getDayName(getActivity(), dateAujourdhui);
+            String dateText = Utility.getFormattedMonthDay(getActivity(), dateAujourdhui);
             mFriendlyDateView.setText(friendlyDateText);
             mDateView.setText(dateText);
 
@@ -270,17 +317,22 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         final Paint paintLow = new Paint();
         final Paint paintHigh = new Paint();
+        final Paint paintAjourdhui = new Paint();
 
         private List<Temperature> temperatures;
 
         public Rectangle(Context context) {
             super(context);
+
             maListe = DetailActivity.getMaListe();
             temperatures = new ArrayList<>(maListe);
 
             paintLow.setColor(Color.GREEN);
+            paintLow.setAlpha(255);
             paintLow.setStrokeWidth(5.0f);
+
             paintHigh.setColor(Color.RED);
+            paintHigh.setAlpha(255);
             paintHigh.setStrokeWidth(5.0f);
         }
 
@@ -288,7 +340,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         public void onDraw(Canvas canvas) {
             int graphicHeight = graphic.getHeight();
             int graphicWidth = graphic.getWidth();
-
+            setTextViewDate();
+            setTextViewDegres();
             dessinerSeparateurs(canvas, graphicWidth, graphicHeight);
             dessinerBoite(canvas, graphicWidth, graphicHeight);
 
@@ -348,7 +401,21 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             //lignes du graphic
             float xLine = width / 7;
 
-            for (int i = 0; i < temperatures.size() - 1; i++) {
+            for (int i = 0; i < temperatures.size(); i++) {
+                if (temperatures.get(i).date == dateAujourdhui) {
+                    paintAjourdhui.setColor(Color.YELLOW);
+                    paintAjourdhui.setAlpha(125);
+                    paintAjourdhui.setStrokeWidth(width / 7);
+
+                    double line;
+                    if (i == 0) {
+                        line = (width / 14) * (i + 1);
+                    } else {
+                        line = ((width / 7) * (i + 1)) - (width / 14) + 2.5;
+                    }
+                    canvas.drawLine((float)line, 0, (float)line, height - 5, paintAjourdhui);
+                }
+
                 canvas.drawLine(xLine, 0, xLine, height - 5, paint);
                 xLine += width / 7;
             }
@@ -359,7 +426,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             paint.setStrokeWidth(10f);
 
             //lignes noires autour du graphic
-            canvas.drawLine(0, 0, 0, height, paint);
+            canvas.drawLine(1, 0, 1, height, paint);
             canvas.drawLine(0, height, width, height, paint);
         }
 
@@ -398,6 +465,69 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 }
             }
             return maxValue;
+        }
+
+        private void setTextViewDate() {
+            DateFormat df = getShortDateInstanceWithoutYears(Locale.getDefault());
+
+            int graphicWidth = graphic.getWidth();
+
+            int x = graphicWidth / 42;
+            int y = 0;
+            for (int i = 0; i < temperatures.size(); i++) {
+                Date date = new Date(temperatures.get(i).date);
+                dates.get(i).setText(df.format(date));
+
+                dates.get(i).setX(x);
+                dates.get(i).setY(y);
+
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewPager.LayoutParams.WRAP_CONTENT, ViewPager.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(x, y, 0, 0);
+
+                dates.get(i).setLayoutParams(lp);
+
+                x += graphicWidth / 7;
+            }
+        }
+
+        public DateFormat getShortDateInstanceWithoutYears(Locale locale) {
+            SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, locale);
+            sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+            return sdf;
+        }
+
+        private void setTextViewDegres() {
+
+            int graphicWidth = graphic.getWidth();
+            int graphicHeight = graphic.getHeight();
+
+            int x = graphicWidth / 42;
+            int y = 200;
+            for (int i = 0; i < degresLow.size(); i++) {
+                degresLow.get(i).setX(x);
+                degresLow.get(i).setY(y);
+
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewPager.LayoutParams.WRAP_CONTENT, ViewPager.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(x, y, 0, 0);
+
+                degresLow.get(i).setLayoutParams(lp);
+
+                x += graphicWidth / 7;
+            }
+
+            x = graphicWidth / 42;
+            y = 100;
+            for (int i = 0; i < degresHigh.size(); i++) {
+                degresHigh.get(i).setX(x);
+                degresHigh.get(i).setY(y);
+
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewPager.LayoutParams.WRAP_CONTENT, ViewPager.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(x, y, 0, 0);
+
+                degresHigh.get(i).setLayoutParams(lp);
+
+                x += graphicWidth / 7;
+            }
         }
     }
 }
