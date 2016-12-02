@@ -268,38 +268,136 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private class Rectangle extends View{
         Paint paint = new Paint();
 
+        final Paint paintLow = new Paint();
+        final Paint paintHigh = new Paint();
+
+        private List<Temperature> temperatures;
+
         public Rectangle(Context context) {
             super(context);
+            maListe = DetailActivity.getMaListe();
+            temperatures = new ArrayList<>(maListe);
+
+            paintLow.setColor(Color.GREEN);
+            paintLow.setStrokeWidth(5.0f);
+            paintHigh.setColor(Color.RED);
+            paintHigh.setStrokeWidth(5.0f);
         }
 
         @Override
         public void onDraw(Canvas canvas) {
-
-            //canvas.drawLine(startX, startY, stopX, stopY, paint);
             int graphicHeight = graphic.getHeight();
             int graphicWidth = graphic.getWidth();
 
-            paint.setColor(Color.BLACK);
-            paint.setStrokeWidth(10f);
+            dessinerSeparateurs(canvas, graphicWidth, graphicHeight);
+            dessinerBoite(canvas, graphicWidth, graphicHeight);
 
-            canvas.drawLine(0, 0, 0, graphicHeight, paint);
-            canvas.drawLine(0, graphicHeight, graphicWidth, graphicHeight, paint);
+            //calcule des points sur le graphic
+            double tempMinY = getMinLow(temperatures);
+            double tempMaxY = getMaxHigh(temperatures);
 
+            if (tempMinY < 0) {
+                double difference = Math.abs(tempMinY);
+
+                for (Temperature temperature : temperatures) {
+                    temperature.low += difference;
+                    temperature.high += difference;
+                }
+
+                tempMaxY += difference;
+            } else if (tempMinY > 0) {
+                double difference = tempMinY;
+
+                for (Temperature temperature : temperatures) {
+                    temperature.low -= difference;
+                    temperature.high -= difference;
+                }
+
+                tempMaxY -= difference;
+            }
+
+            float milieuX = graphicWidth / 14;
+
+            int padding = 150;
+            int viewPort = graphicHeight - padding;
+
+            for (int i = 0; i < temperatures.size(); i++) {
+                double posYLow = getYPos(temperatures.get(i).low, tempMaxY, viewPort, padding);
+                double posYHigh = getYPos(temperatures.get(i).high, tempMaxY, viewPort, padding);
+
+                canvas.drawCircle(milieuX, (float) posYLow, 10, paintLow);
+                canvas.drawCircle(milieuX, (float) posYHigh, 10, paintHigh);
+
+                if (i != 0) {
+                    float posYLowPrecedent = (float)getYPos(temperatures.get(i - 1).low, tempMaxY, viewPort, padding);
+                    float posYHighPrecedent = (float)getYPos(temperatures.get(i - 1).high, tempMaxY, viewPort, padding);
+
+                    float xPrecedent = milieuX - (graphicWidth / 7);
+                    canvas.drawLine(xPrecedent, posYLowPrecedent, milieuX, (float)posYLow, paintLow);
+                    canvas.drawLine(xPrecedent, posYHighPrecedent, milieuX, (float)posYHigh, paintHigh);
+                }
+
+                milieuX += graphicWidth / 7;
+            }
+        }
+
+        private void dessinerSeparateurs(Canvas canvas, int width, int height) {
             paint.setColor(Color.LTGRAY);
             paint.setStrokeWidth(5f);
 
-            float xLine = graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
-            xLine += graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
-            xLine += graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
-            xLine += graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
-            xLine += graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
-            xLine += graphicWidth/7;
-            canvas.drawLine(xLine, 0, xLine, graphicHeight - 5, paint);
+            //lignes du graphic
+            float xLine = width / 7;
+
+            for (int i = 0; i < temperatures.size() - 1; i++) {
+                canvas.drawLine(xLine, 0, xLine, height - 5, paint);
+                xLine += width / 7;
+            }
+        }
+
+        private void dessinerBoite(Canvas canvas, int width, int height) {
+            paint.setColor(Color.BLACK);
+            paint.setStrokeWidth(10f);
+
+            //lignes noires autour du graphic
+            canvas.drawLine(0, 0, 0, height, paint);
+            canvas.drawLine(0, height, width, height, paint);
+        }
+
+        /**
+         * Calcule la position d'un point relative à un viewport.
+         * @param temp Le point à calculer.
+         * @param maxScaleY La hauteur maximale pour les proportions.
+         * @param viewHeight La hauteur de l'affichage.
+         * @param padding L'espacement haut et bas (globalisé) à respecter.
+         * @return La position Y du point.
+         */
+        private double getYPos(double temp, double maxScaleY, double viewHeight, double padding) {
+            double yPos = temp / maxScaleY * viewHeight;
+            yPos = Math.abs(yPos - viewHeight); // Flip the graphic.
+            yPos += (padding / 2);
+            return yPos;
+        }
+
+        private double getMinLow(List<Temperature> liste) {
+            double minValue = liste.get(0).low;
+
+            for (int i = 1; i < liste.size(); i++) {
+                if (minValue > liste.get(i).low) {
+                    minValue = liste.get(i).low;
+                }
+            }
+            return minValue;
+        }
+
+        private double getMaxHigh(List<Temperature> liste) {
+            double maxValue = liste.get(0).high;
+
+            for (int i = 1; i < liste.size(); i++) {
+                if (maxValue < liste.get(i).high) {
+                    maxValue = liste.get(i).high;
+                }
+            }
+            return maxValue;
         }
     }
 }
