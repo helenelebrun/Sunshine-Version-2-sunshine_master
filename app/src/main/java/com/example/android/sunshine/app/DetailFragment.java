@@ -167,7 +167,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_low));
 
         for (int i = 0; i < degresLow.size(); i++) {
-            degresLow.get(i).setText(String.format("%.1f",listGraph.get(i).low));
+            degresLow.get(i).setText(String.format("%.1f",listGraph.get(i).low) + "°");
         }
 
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre1_high));
@@ -179,7 +179,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_high));
 
         for (int i = 0; i < degresHigh.size(); i++) {
-            degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high));
+            degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high) + "°");
         }
 
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
@@ -318,6 +318,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         final Paint paintLow = new Paint();
         final Paint paintHigh = new Paint();
         final Paint paintAjourdhui = new Paint();
+        final Paint paintLineZero = new Paint();
 
         private List<Temperature> temperatures;
 
@@ -327,13 +328,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             maListe = DetailActivity.getMaListe();
             temperatures = new ArrayList<>(maListe);
 
-            paintLow.setColor(Color.GREEN);
+            paintLow.setColor(Color.BLUE);
             paintLow.setAlpha(255);
             paintLow.setStrokeWidth(5.0f);
 
             paintHigh.setColor(Color.RED);
             paintHigh.setAlpha(255);
             paintHigh.setStrokeWidth(5.0f);
+
+            paintLineZero.setColor(Color.GRAY);
+            paintLineZero.setStrokeWidth(1f);
         }
 
         @Override
@@ -341,7 +345,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             int graphicHeight = graphic.getHeight();
             int graphicWidth = graphic.getWidth();
             setTextViewDate();
-            setTextViewDegres();
             dessinerSeparateurs(canvas, graphicWidth, graphicHeight);
             dessinerBoite(canvas, graphicWidth, graphicHeight);
 
@@ -388,6 +391,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     float xPrecedent = milieuX - (graphicWidth / 7);
                     canvas.drawLine(xPrecedent, posYLowPrecedent, milieuX, (float)posYLow, paintLow);
                     canvas.drawLine(xPrecedent, posYHighPrecedent, milieuX, (float)posYHigh, paintHigh);
+                } else {
+                    setTextViewDegres(tempMaxY, viewPort, padding);
+                    canvas.drawLine(5, (float)posYLow, graphicWidth, (float)posYLow, paintLineZero);
                 }
 
                 milieuX += graphicWidth / 7;
@@ -404,7 +410,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             for (int i = 0; i < temperatures.size(); i++) {
                 if (temperatures.get(i).date == dateAujourdhui) {
                     paintAjourdhui.setColor(Color.YELLOW);
-                    paintAjourdhui.setAlpha(125);
+                    paintAjourdhui.setAlpha(75);
                     paintAjourdhui.setStrokeWidth(width / 7);
 
                     double line;
@@ -472,7 +478,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             int graphicWidth = graphic.getWidth();
 
-            int x = graphicWidth / 42;
+            int x = graphicWidth / 35;
             int y = 0;
             for (int i = 0; i < temperatures.size(); i++) {
                 Date date = new Date(temperatures.get(i).date);
@@ -496,14 +502,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             return sdf;
         }
 
-        private void setTextViewDegres() {
-
+        private void setTextViewDegres(double tempMaxY, int viewPort, int padding) {
             int graphicWidth = graphic.getWidth();
-            int graphicHeight = graphic.getHeight();
 
-            int x = graphicWidth / 42;
-            int y = 200;
+            int x = graphicWidth / 21;
+            int y;
+
             for (int i = 0; i < degresLow.size(); i++) {
+                y = ((int) getYPos(temperatures.get(i).low, tempMaxY, viewPort, padding)) + 10;
                 degresLow.get(i).setX(x);
                 degresLow.get(i).setY(y);
 
@@ -515,9 +521,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 x += graphicWidth / 7;
             }
 
-            x = graphicWidth / 42;
-            y = 100;
+            x = graphicWidth / 21;
+
             for (int i = 0; i < degresHigh.size(); i++) {
+                y = ((int) getYPos(temperatures.get(i).high, tempMaxY, viewPort, padding)) + 10;
+
                 degresHigh.get(i).setX(x);
                 degresHigh.get(i).setY(y);
 
