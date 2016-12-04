@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">Sunshine</string>
+    <string name="app_name_copyright">Sunshine ©</string>
     <string name="action_map">Géolocalisation</string>
     <string name="action_settings">Paramètres</string>
     <string name="action_share">Partager</string>

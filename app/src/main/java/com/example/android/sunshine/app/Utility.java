@@ -64,7 +64,7 @@ public class Utility {
                 e.printStackTrace();
             }
 
-            if (address.size() > 0) {
+            if (address != null && address.size() > 0) {
                 locationQuery = address.get(0).getPostalCode();
             }
         }
