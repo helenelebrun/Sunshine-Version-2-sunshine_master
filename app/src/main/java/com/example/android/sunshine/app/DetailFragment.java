@@ -122,6 +122,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private long dateAujourdhui;
 
+    private TextView legendeMin;
+    private TextView legendeMax;
+
     public DetailFragment() {
         setHasOptionsMenu(true);
     }
@@ -181,6 +184,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         for (int i = 0; i < degresHigh.size(); i++) {
             degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high) + "°");
         }
+
+        legendeMin = (TextView) rootView.findViewById(R.id.fragment_detail_textView_minLegende);
+        legendeMax = (TextView) rootView.findViewById(R.id.fragment_detail_textView_maxLegende);
 
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
         graphic.addView(new Rectangle(getActivity()));
@@ -318,7 +324,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         final Paint paintLow = new Paint();
         final Paint paintHigh = new Paint();
         final Paint paintAjourdhui = new Paint();
-        final Paint paintLineZero = new Paint();
 
         private List<Temperature> temperatures;
 
@@ -335,9 +340,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             paintHigh.setColor(Color.RED);
             paintHigh.setAlpha(255);
             paintHigh.setStrokeWidth(5.0f);
-
-            paintLineZero.setColor(Color.GRAY);
-            paintLineZero.setStrokeWidth(1f);
         }
 
         @Override
@@ -393,7 +395,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     canvas.drawLine(xPrecedent, posYHighPrecedent, milieuX, (float)posYHigh, paintHigh);
                 } else {
                     setTextViewDegres(tempMaxY, viewPort, padding);
-                    canvas.drawLine(5, (float)posYLow, graphicWidth, (float)posYLow, paintLineZero);
                 }
 
                 milieuX += graphicWidth / 7;
@@ -434,6 +435,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             //lignes noires autour du graphic
             canvas.drawLine(1, 0, 1, height, paint);
             canvas.drawLine(0, height, width, height, paint);
+
+            //légende des couleurs
+            paintLow.setStrokeWidth(30f);
+            paintHigh.setStrokeWidth(30f);
+            canvas.drawLine(width - (legendeMin.getWidth() * 4.3f), height - (legendeMin.getHeight() / 1.5f), width - (legendeMin.getWidth() * 4.3f), height - 10, paintLow);
+            canvas.drawLine(width - (legendeMax.getWidth() * 1.8f), height - (legendeMax.getHeight() / 1.5f), width - (legendeMax.getWidth() * 1.8f), height - 10, paintHigh);
+            paintLow.setStrokeWidth(5.0f);
+            paintHigh.setStrokeWidth(5.0f);
         }
 
         /**

@@ -359,6 +359,30 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="max"
+                    android:id="@+id/fragment_detail_textView_maxLegende"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="12sp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="min"
+                    android:textSize="12sp"
+                    android:id="@+id/fragment_detail_textView_minLegende"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fragment_detail_textView_maxLegende"
+                    android:layout_toStartOf="@+id/fragment_detail_textView_maxLegende" />
             </RelativeLayout>
         </LinearLayout>
 
