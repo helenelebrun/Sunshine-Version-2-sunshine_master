@@ -97,5 +97,13 @@
 
     <!-- Strings related to Notification preference -->
     <string name="pref_last_notification" translatable="false">last_notification</string>
+    <string name="short_desc_snow">Snow</string>
+    <string name="short_desc_light_rain">Light rain</string>
+    <string name="short_desc_rain">Rain</string>
+    <string name="short_desc_fog">Fog</string>
+    <string name="short_desc_sun">Clear</string>
+    <string name="short_desc_storm">Storm</string>
+    <string name="short_desc_cloud">Cloud</string>
+    <string name="short_desc_partly_cloudy">Partly cloudy</string>
 
 </resources>

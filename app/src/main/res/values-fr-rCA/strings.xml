@@ -25,4 +25,12 @@
     <string name="title_activity_settings">Paramètres</string>
     <string name="today">Aujourd\'hui</string>
     <string name="tomorrow">Demain</string>
+    <string name="short_desc_snow">Neige</string>
+    <string name="short_desc_light_rain">Légère pluie</string>
+    <string name="short_desc_rain">Pluie</string>
+    <string name="short_desc_fog">Brume</string>
+    <string name="short_desc_sun">Ensoleillé</string>
+    <string name="short_desc_storm">Orage</string>
+    <string name="short_desc_cloud">Nuageux</string>
+    <string name="short_desc_partly_cloudy">Nuageux avec éclaircies</string>
 </resources>

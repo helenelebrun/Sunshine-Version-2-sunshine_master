@@ -347,7 +347,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
                     int weatherId = cursor.getInt(INDEX_WEATHER_ID);
                     double high = cursor.getDouble(INDEX_MAX_TEMP);
                     double low = cursor.getDouble(INDEX_MIN_TEMP);
-                    String desc = cursor.getString(INDEX_SHORT_DESC);
+                    String desc = Utility.getShortDescriptionForWeatherCondition(getContext(), weatherId);
 
                     int iconId = Utility.getIconResourceForWeatherCondition(weatherId);
                     Resources resources = context.getResources();
