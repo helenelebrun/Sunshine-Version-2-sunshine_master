@@ -176,7 +176,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_low));
 
         for (int i = 0; i < degresLow.size(); i++) {
-            degresLow.get(i).setText(String.format("%.1f",listGraph.get(i).low) + "°");
+            degresLow.get(i).setText(String.format("%.1f",maListe.get(i).low) + "°");
         }
 
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre1_high));
