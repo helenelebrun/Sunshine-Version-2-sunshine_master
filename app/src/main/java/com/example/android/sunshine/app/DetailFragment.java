@@ -274,7 +274,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mDateView.setText(dateText);
 
             // Read description from cursor and update view
-            String description = data.getString(COL_WEATHER_DESC);
+            String description = Utility.getShortDescriptionForWeatherCondition(getActivity(), weatherId);
             mDescriptionView.setText(description);
 
             // For accessibility, add a content description to the icon field
