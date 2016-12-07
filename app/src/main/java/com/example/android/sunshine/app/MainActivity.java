@@ -125,11 +125,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         if ( null != ff ) {
             ff.onDataChanged();
         }
-
-
-
     }
-
 
     @Override
     public void onItemSelected(Uri contentUri) {

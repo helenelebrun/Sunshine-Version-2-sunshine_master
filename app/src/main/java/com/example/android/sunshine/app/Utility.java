@@ -37,6 +37,7 @@ public class Utility {
     public static String getPreferredLocation(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+
         double longitude = Double.parseDouble(
                 prefs.getString(context.getString(R.string.pref_longitude_key),
                         context.getString(R.string.pref_longitude_default)));
@@ -68,7 +69,6 @@ public class Utility {
                 locationQuery = address.get(0).getPostalCode();
             }
         }
-
 
         return locationQuery;
     }

@@ -3,19 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditTextPreference
-        android:title="@string/pref_latitude_label"
-        android:key="@string/pref_latitude_key"
-        android:defaultValue="@string/pref_latitude_default"
-        android:inputType="text"
-        android:singleLine="true" />
-
-    <EditTextPreference
-        android:title="@string/pref_longitude_label"
-        android:key="@string/pref_longitude_key"
-        android:defaultValue="@string/pref_longitude_default"
-        android:inputType="text"
-        android:singleLine="true" />
+    <com.example.android.sunshine.app.LocationDialogPreference
+        android:key="@string/pref_location_key"
+        android:dialogIcon="@android:drawable/ic_dialog_alert"
+        android:title="@string/pref_location_label"
+        />
 
     <ListPreference
         android:title="@string/pref_units_label"
