@@ -1,25 +1,51 @@
 package com.example.android.sunshine.app;
 
-import android.annotation.TargetApi;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Icon;
-import android.os.Build;
-import android.widget.ImageView;
+import android.content.res.Resources;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
-import java.util.Random;
+import com.example.android.sunshine.app.data.WeatherContract;
 
 /**
  * Implementation of App Widget functionality.
  */
 public class SunShineWidget extends AppWidgetProvider {
 
+    private static final String[] FORECAST_COLUMNS = {
+            // In this case the id needs to be fully qualified with a table name, since
+            // the content provider joins the location & weather tables in the background
+            // (both have an _id column)
+            // On the one hand, that's annoying.  On the other, you can search the weather table
+            // using the location set by the user, which is only in the Location table.
+            // So the convenience is worth it.
+            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
+            WeatherContract.WeatherEntry.COLUMN_DATE,
+            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
+            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
+            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
+            WeatherContract.LocationEntry.COLUMN_CITY_NAME,
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
+            WeatherContract.LocationEntry.COLUMN_COORD_LAT,
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+    };
+
+    // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
+    // must change.
+    static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_DATE = 1;
+    static final int COL_WEATHER_DESC = 2;
+    static final int COL_WEATHER_MAX_TEMP = 3;
+    static final int COL_WEATHER_MIN_TEMP = 4;
+    static final int COL_CITY_NAME = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
 
 
     @Override
@@ -27,34 +53,46 @@ public class SunShineWidget extends AppWidgetProvider {
 
         final int count = appWidgetIds.length;
 
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+
+        String locationSetting = Utility.getPreferredLocation(context);
+
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+
+        Cursor cursor = context.getContentResolver().query(weatherForLocationUri,FORECAST_COLUMNS, null, null, sortOrder);
+        cursor.moveToFirst();
+
+
         for (int i = 0; i < count; i++) {
 
             int widgetId = appWidgetIds[i];
 
-            Temperature todayWeather = DetailActivity.getMaListe().get(0);
-            int weatherId = todayWeather.weatherId;
+            int weatherId =  cursor.getInt(COL_WEATHER_CONDITION_ID );
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                     R.layout.sun_shine_widget);
 
-            remoteViews.setImageViewResource(R.id.widget_item_icon, Utility.getArtResourceForWeatherCondition(weatherId));
+            remoteViews.setImageViewResource(R.id.widget_item_image, Utility.getArtResourceForWeatherCondition(weatherId));
 
-            long dateAujourdhui = todayWeather.date;
+            long dateAujourdhui = cursor.getLong(COL_WEATHER_DATE);
             String friendlyDateText = Utility.getDayName(context, dateAujourdhui);
-            String dateText = Utility.getFormattedMonthDay(context, dateAujourdhui);
 
             remoteViews.setTextViewText(R.id.widget_item_date_textview, friendlyDateText);
 
             String description = Utility.getShortDescriptionForWeatherCondition(context, weatherId);
             remoteViews.setTextViewText(R.id.widget_item_forecast_textview, description);
 
-            String highString = Utility.formatTemperature(context, todayWeather.high);
-            remoteViews.setTextViewText(R.id.widget_item_high_textview, highString );
+            double high = cursor.getDouble(COL_WEATHER_MAX_TEMP);
+            String highString = Utility.formatTemperature(context, high);
+            remoteViews.setTextViewText(R.id.widget_item_high_textview, highString);
 
-            String lowString = Utility.formatTemperature(context, todayWeather.low);
-            remoteViews.setTextViewText(R.id.widget_item_low_textview,lowString);
+            double low = cursor.getDouble(COL_WEATHER_MIN_TEMP);
+            String lowString = Utility.formatTemperature(context, low);
+            remoteViews.setTextViewText(R.id.widget_item_low_textview, lowString);
 
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
+
         }
     }
 

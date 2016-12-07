@@ -42,6 +42,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,7 +130,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private long dateAujourdhui;
 
     private TextView legendeMin;
+    private LinearLayout couleurMin;
     private TextView legendeMax;
+    private LinearLayout couleurMax;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -192,7 +195,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
 
         legendeMin = (TextView) rootView.findViewById(R.id.fragment_detail_textView_minLegende);
+        couleurMin = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMin);
         legendeMax = (TextView) rootView.findViewById(R.id.fragment_detail_textView_maxLegende);
+        couleurMax = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMax);
 
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
         graphic.addView(new Rectangle(getActivity()));
@@ -479,12 +484,14 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             canvas.drawLine(0, height, width, height, paint);
 
             //légende des couleurs
-            paintLow.setStrokeWidth(30f);
-            paintHigh.setStrokeWidth(30f);
-            canvas.drawLine(width - (legendeMin.getWidth() * 4.3f), height - (legendeMin.getHeight() / 1.5f), width - (legendeMin.getWidth() * 4.3f), height - 10, paintLow);
-            canvas.drawLine(width - (legendeMax.getWidth() * 1.8f), height - (legendeMax.getHeight() / 1.5f), width - (legendeMax.getWidth() * 1.8f), height - 10, paintHigh);
-            paintLow.setStrokeWidth(5.0f);
-            paintHigh.setStrokeWidth(5.0f);
+            //paintLow.setStrokeWidth(30f);
+            //paintHigh.setStrokeWidth(30f);
+            //canvas.drawLine(width - (legendeMin.getWidth() * 4.3f), height - (legendeMin.getHeight() / 1.5f), width - (legendeMin.getWidth() * 4.3f), height - 10, paintLow);
+            //canvas.drawLine(width - (legendeMax.getWidth() * 1.8f), height - (legendeMax.getHeight() / 1.5f), width - (legendeMax.getWidth() * 1.8f), height - 10, paintHigh);
+            //paintLow.setStrokeWidth(5.0f);
+            //paintHigh.setStrokeWidth(5.0f);
+            couleurMin.setBackgroundColor(Color.BLUE);
+            couleurMax.setBackgroundColor(Color.RED);
         }
 
         /**
