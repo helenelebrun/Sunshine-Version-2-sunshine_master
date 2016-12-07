@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">Sunshine</string>
+    <string name="app_name_copyright">Sunshine ©</string>
+    <string name="action_map">Géolocalisation</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_share">Partager</string>
+    <string name="format_humidity">Humidité: <xliff:g id="humidity">%1.0f</xliff:g> %%</string>
+    <string name="format_full_friendly_date"><xliff:g id="month">%1$s</xliff:g>, <xliff:g id="day">%2$s</xliff:g></string>
+    <string name="format_notification">Prévision: <xliff:g id="condition">%1$s</xliff:g> Maximum: <xliff:g id="high">%2$s</xliff:g> Minimum: <xliff:g id="low">%3$s</xliff:g></string>
+    <string name="format_pressure">Pression: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
+    <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="format_wind_kmh">Vent: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
+    <string name="format_wind_mph">Vent: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
+    <string name="pref_enable_notifications_true">Activé</string>
+    <string name="pref_enable_notifications_false">Désactivé</string>
+    <string name="pref_enable_notifications_label">Alertes métérologiques</string>
+    <string name="pref_latitude_label">Latitude</string>
+    <string name="pref_location_label">Emplacement</string>
+    <string name="pref_longitude_label">Longitude</string>
+    <string name="pref_units_label">Unités de température</string>
+    <string name="pref_units_label_imperial">Impérial</string>
+    <string name="pref_units_label_metric">Métrique</string>
+    <string name="title_activity_detail">Détails</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="tomorrow">Demain</string>
+    <string name="short_desc_snow">Neige</string>
+    <string name="short_desc_light_rain">Légère pluie</string>
+    <string name="short_desc_rain">Pluie</string>
+    <string name="short_desc_fog">Brume</string>
+    <string name="short_desc_sun">Ensoleillé</string>
+    <string name="short_desc_storm">Orage</string>
+    <string name="short_desc_cloud">Nuageux</string>
+    <string name="short_desc_partly_cloudy">Nuageux avec éclaircies</string>
+</resources>

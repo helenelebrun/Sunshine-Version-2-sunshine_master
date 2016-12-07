@@ -44,6 +44,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -216,7 +217,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
-            String cityName = cityJson.getString(OWM_CITY_NAME);
+            //String cityName = cityJson.getString(OWM_CITY_NAME);
+            String cityName = new String(cityJson.getString(OWM_CITY_NAME).getBytes("ISO-8859-1"), "UTF-8");
 
             JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
             double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
@@ -317,6 +319,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
