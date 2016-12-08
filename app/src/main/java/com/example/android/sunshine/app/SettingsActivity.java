@@ -16,7 +16,11 @@
 package com.example.android.sunshine.app;
 
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -25,6 +29,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import java.util.prefs.Preferences;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -51,7 +57,6 @@ public class SettingsActivity extends PreferenceActivity
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_general);
         }
-
     }
 
     /**
@@ -87,8 +92,17 @@ public class SettingsActivity extends PreferenceActivity
             // For other preferences, set the summary to the value's simple string representation.
             preference.setSummary(stringValue);
         }
+
+        Intent initialUpdateIntent = new Intent(
+                AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        initialUpdateIntent
+                .setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        sendBroadcast(initialUpdateIntent);
+
         return true;
     }
+
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
