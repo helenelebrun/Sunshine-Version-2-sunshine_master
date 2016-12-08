@@ -33,4 +33,6 @@
     <string name="short_desc_storm">Orage</string>
     <string name="short_desc_cloud">Nuageux</string>
     <string name="short_desc_partly_cloudy">Nuageux avec éclaircies</string>
+    <string name="action_myLocation">Ma position</string>
+    <string name="location_not_found">Impossible de vous localiser</string>
 </resources>

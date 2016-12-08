@@ -105,5 +105,7 @@
     <string name="short_desc_storm">Storm</string>
     <string name="short_desc_cloud">Cloud</string>
     <string name="short_desc_partly_cloudy">Partly cloudy</string>
+    <string name="action_myLocation">My location</string>
+    <string name="location_not_found">Could not found your location</string>
 
 </resources>

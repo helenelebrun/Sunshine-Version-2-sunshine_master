@@ -15,21 +15,42 @@
  */
 package com.example.android.sunshine.app;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.database.Cursor;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.CheckBoxPreference;
+import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback {
 
@@ -38,6 +59,23 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
 
     private boolean mTwoPane;
     private String mLocation;
+    private Location mCurrentPosition;
+
+    private static final String[] INITIAL_PERMS = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_CONTACTS
+    };
+    private static final String[] CAMERA_PERMS = {
+            Manifest.permission.CAMERA
+    };
+    private static final String[] CONTACTS_PERMS = {
+            Manifest.permission.READ_CONTACTS
+    };
+    private static final String[] LOCATION_PERMS = {
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
+    private static final int LOCATION_REQUEST = 1340;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +102,23 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             getSupportActionBar().setElevation(0f);
         }
 
-        ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
+        ForecastFragment forecastFragment = ((ForecastFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
 
         SunshineSyncAdapter.initializeSyncAdapter(this);
+
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    99);
+
+        }
+
     }
-
-
-
-
 
 
     @Override
@@ -90,27 +135,63 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
+        switch (id) {
+            //noinspection SimplifiableIfStatement
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
+            case R.id.action_myLocation:
+                setCurrentPositionForPref();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setCurrentPositionForPref() {
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+
+
+        if (mCurrentPosition != null) {
+            SharedPreferences locationSetting = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = locationSetting.edit();
+            editor.putString(getString(R.string.pref_longitude_key), String.valueOf(mCurrentPosition.getLongitude()));
+            editor.putString(getString(R.string.pref_latitude_key), String.valueOf(mCurrentPosition.getLatitude()));
+            editor.commit();
+
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if (null != ff) {
+                ff.onLocationChanged();
+            }
+        } else {
+            Toast.makeText(this, R.string.location_not_found, Toast.LENGTH_SHORT);
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        String location = Utility.getPreferredLocation( this );
+        String location = Utility.getPreferredLocation(this);
         // update the location in our second pane using the fragment manager
-            if (location != null && !location.equals(mLocation)) {
-            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-            if ( null != ff ) {
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if (null != ff) {
                 ff.onLocationChanged();
             }
-            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-            if ( null != df ) {
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (null != df) {
                 df.onLocationChanged(location);
             }
             mLocation = location;
@@ -118,11 +199,10 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
     }
 
     @Override
-    protected  void onRestart()
-    {
+    protected void onRestart() {
         super.onRestart();
-        ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
-        if ( null != ff ) {
+        ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+        if (null != ff) {
             ff.onDataChanged();
         }
     }
@@ -155,6 +235,28 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             intent.putParcelableArrayListExtra("listTemp", (ArrayList<? extends Parcelable>) liste);
 
             startActivity(intent);
+        }
+    }
+
+
+    private class MyLocationListener implements LocationListener {
+        @Override
+
+        public void onLocationChanged(Location loc) {
+
+            mCurrentPosition = loc;
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
 }
