@@ -44,10 +44,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
