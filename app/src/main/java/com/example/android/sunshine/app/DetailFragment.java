@@ -39,6 +39,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -129,10 +130,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private long dateAujourdhui;
 
-    private TextView legendeMin;
     private LinearLayout couleurMin;
-    private TextView legendeMax;
     private LinearLayout couleurMax;
+
+    private Rectangle rectangleGraphic;
+
+    private int noJourneeClickPrec = 0;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -194,15 +197,58 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high) + "°");
         }
 
-        legendeMin = (TextView) rootView.findViewById(R.id.fragment_detail_textView_minLegende);
         couleurMin = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMin);
-        legendeMax = (TextView) rootView.findViewById(R.id.fragment_detail_textView_maxLegende);
         couleurMax = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMax);
 
         graphic = (RelativeLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_graphic);
-        graphic.addView(new Rectangle(getActivity()));
+
+        rectangleGraphic = new Rectangle(getActivity());
+        graphic.addView(rectangleGraphic);
+
+        addOnTouchToGraphic();
 
         return rootView;
+    }
+
+    private void addOnTouchToGraphic() {
+
+        graphic.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+
+                    float x = event.getX();
+                    int noJournee = getNoJourneeSemaine(x);
+
+                    if (noJournee != noJourneeClickPrec) {
+                        setTemperatureLabelsForWeek(noJournee - 1);
+                    }
+                    noJourneeClickPrec = noJournee;
+                }
+                return true;
+            }
+
+            private int getNoJourneeSemaine(float x) {
+
+                float graphicWidth = graphic.getWidth();
+                float journeeWidth = graphicWidth / 7;
+
+                float posPrecedent = 0;
+                float posActuelle = journeeWidth;
+
+                int noJournee = 1;
+
+                for (int i = 1; i <= 7; i++) {
+                    if (x >= posPrecedent && x < posActuelle) {
+                        noJournee = i;
+                        break;
+                    }
+                    posPrecedent = journeeWidth;
+                    posActuelle += journeeWidth;
+                }
+                return noJournee;
+            }
+        });
     }
 
     @Override
@@ -362,6 +408,48 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
+    private void setTemperatureLabelsForWeek(int indexSemaine) {
+
+        int weatherId = listGraph.get(indexSemaine).weatherId;
+
+        mIconView.setBackgroundResource(Utility.getArtResourceForWeatherCondition(weatherId));
+        AnimationDrawable animation = (AnimationDrawable) mIconView.getBackground();
+        animation.start();
+
+        dateAujourdhui = listGraph.get(indexSemaine).date;
+        String friendlyDateText = Utility.getDayName(getActivity(), dateAujourdhui);
+        String dateText = Utility.getFormattedMonthDay(getActivity(), dateAujourdhui);
+        mFriendlyDateView.setText(friendlyDateText);
+        mDateView.setText(dateText);
+
+        String description = Utility.getShortDescriptionForWeatherCondition(getActivity(), weatherId);
+        mDescriptionView.setText(description);
+
+        mIconView.setContentDescription(description);
+
+        double high = listGraph.get(indexSemaine).high;
+        String highString = Utility.formatTemperature(getActivity(), high);
+        mHighTempView.setText(highString);
+
+        double low = listGraph.get(indexSemaine).low;
+        String lowString = Utility.formatTemperature(getActivity(), low);
+        mLowTempView.setText(lowString);
+
+        float humidity = listGraph.get(indexSemaine).humidity;
+        mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
+
+        float windSpeedStr = listGraph.get(indexSemaine).windSpeed;
+        float windDirStr = listGraph.get(indexSemaine).degrees;
+        mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
+
+        float pressure = listGraph.get(indexSemaine).pressure;
+        mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
+
+        mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
+
+        rectangleGraphic.invalidate();
+    }
+
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }
 
@@ -483,13 +571,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             canvas.drawLine(1, 0, 1, height, paint);
             canvas.drawLine(0, height, width, height, paint);
 
-            //légende des couleurs
-            //paintLow.setStrokeWidth(30f);
-            //paintHigh.setStrokeWidth(30f);
-            //canvas.drawLine(width - (legendeMin.getWidth() * 4.3f), height - (legendeMin.getHeight() / 1.5f), width - (legendeMin.getWidth() * 4.3f), height - 10, paintLow);
-            //canvas.drawLine(width - (legendeMax.getWidth() * 1.8f), height - (legendeMax.getHeight() / 1.5f), width - (legendeMax.getWidth() * 1.8f), height - 10, paintHigh);
-            //paintLow.setStrokeWidth(5.0f);
-            //paintHigh.setStrokeWidth(5.0f);
             couleurMin.setBackgroundColor(Color.BLUE);
             couleurMax.setBackgroundColor(Color.RED);
         }

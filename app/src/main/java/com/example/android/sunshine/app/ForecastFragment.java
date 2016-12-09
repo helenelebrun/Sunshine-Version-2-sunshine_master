@@ -77,7 +77,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             WeatherContract.LocationEntry.COLUMN_CITY_NAME,
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
             WeatherContract.LocationEntry.COLUMN_COORD_LAT,
-            WeatherContract.LocationEntry.COLUMN_COORD_LONG
+            WeatherContract.LocationEntry.COLUMN_COORD_LONG,
+            WeatherContract.WeatherEntry.COLUMN_HUMIDITY,
+            WeatherContract.WeatherEntry.COLUMN_DEGREES,
+            WeatherContract.WeatherEntry.COLUMN_PRESSURE,
+            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED
     };
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
@@ -91,6 +95,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     static final int COL_WEATHER_CONDITION_ID = 6;
     static final int COL_COORD_LAT = 7;
     static final int COL_COORD_LONG = 8;
+    static final int COL_HUMIDITY = 9;
+    static final int COL_DEGREES = 10;
+    static final int COL_PRESSURE = 11;
+    static final int COL_WIND_SPEED = 12;
 
     List<Temperature> temperatures = new ArrayList<>();
 
@@ -219,6 +227,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             temp.get(j).description = cursors.get(j).getString(ForecastFragment.COL_WEATHER_DESC);
             temp.get(j).high = cursors.get(j).getDouble(ForecastFragment.COL_WEATHER_MAX_TEMP);
             temp.get(j).low = cursors.get(j).getDouble(ForecastFragment.COL_WEATHER_MIN_TEMP);
+
+            temp.get(j).humidity = cursors.get(j).getFloat(ForecastFragment.COL_HUMIDITY);
+            temp.get(j).degrees = cursors.get(j).getFloat(ForecastFragment.COL_DEGREES);
+            temp.get(j).pressure = cursors.get(j).getFloat(ForecastFragment.COL_PRESSURE);
+            temp.get(j).windSpeed = cursors.get(j).getFloat(ForecastFragment.COL_WIND_SPEED);
         }
 
         return temp;
