@@ -16,6 +16,8 @@
 package com.example.android.sunshine.app;
 
 import android.Manifest;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -193,6 +195,14 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             }
             mLocation = location;
         }
+
+        Intent intent = new Intent(getApplicationContext(), SunShineWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(this, SunShineWidget.class));
+        widgetManager.notifyAppWidgetViewDataChanged(ids, android.R.id.list);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     @Override

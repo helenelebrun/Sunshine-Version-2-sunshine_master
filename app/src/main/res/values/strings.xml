@@ -108,5 +108,6 @@
     <string name="short_desc_partly_cloudy">Partly cloudy</string>
     <string name="action_myLocation">My location</string>
     <string name="location_not_found">Could not found your location</string>
+    <string name="invalid_coordinates">Please enter a valid coordinate.</string>
 
 </resources>

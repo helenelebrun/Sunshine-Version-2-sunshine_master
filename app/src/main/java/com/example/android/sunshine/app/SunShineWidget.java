@@ -93,30 +93,37 @@ public class SunShineWidget extends AppWidgetProvider {
                 locationSetting, System.currentTimeMillis());
 
         Cursor cursor = context.getContentResolver().query(weatherForLocationUri, FORECAST_COLUMNS, null, null, sortOrder);
-        cursor.moveToFirst();
-        int weatherId = cursor.getInt(COL_WEATHER_CONDITION_ID);
 
 
-        String cityName = cursor.getString(COL_CITY_NAME);
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
 
-        remoteViews.setTextViewText(R.id.widget_item_city_textview, cityName);
-        remoteViews.setImageViewResource(R.id.widget_item_image, Utility.getArtResourceForWeatherCondition(weatherId));
+            int weatherId = cursor.getInt(COL_WEATHER_CONDITION_ID);
 
-        long dateAujourdhui = cursor.getLong(COL_WEATHER_DATE);
-        String friendlyDateText = Utility.getFriendlyDayString(context, dateAujourdhui);
 
-        remoteViews.setTextViewText(R.id.widget_item_date_textview, friendlyDateText);
+            String cityName = cursor.getString(COL_CITY_NAME);
 
-        String description = Utility.getShortDescriptionForWeatherCondition(context, weatherId);
-        remoteViews.setTextViewText(R.id.widget_item_forecast_textview, description);
+            remoteViews.setTextViewText(R.id.widget_item_city_textview, cityName);
+            remoteViews.setImageViewResource(R.id.widget_item_image, Utility.getArtResourceForWeatherCondition(weatherId));
 
-        double high = cursor.getDouble(COL_WEATHER_MAX_TEMP);
-        String highString = Utility.formatTemperature(context, high);
-        remoteViews.setTextViewText(R.id.widget_item_high_textview, highString);
+            long dateAujourdhui = cursor.getLong(COL_WEATHER_DATE);
+            String friendlyDateText = Utility.getFriendlyDayString(context, dateAujourdhui);
 
-        double low = cursor.getDouble(COL_WEATHER_MIN_TEMP);
-        String lowString = Utility.formatTemperature(context, low);
-        remoteViews.setTextViewText(R.id.widget_item_low_textview, lowString);
+            remoteViews.setTextViewText(R.id.widget_item_date_textview, friendlyDateText);
+
+            String description = Utility.getShortDescriptionForWeatherCondition(context, weatherId);
+            remoteViews.setTextViewText(R.id.widget_item_forecast_textview, description);
+
+            double high = cursor.getDouble(COL_WEATHER_MAX_TEMP);
+            String highString = Utility.formatTemperature(context, high);
+            remoteViews.setTextViewText(R.id.widget_item_high_textview, highString);
+
+            double low = cursor.getDouble(COL_WEATHER_MIN_TEMP);
+            String lowString = Utility.formatTemperature(context, low);
+            remoteViews.setTextViewText(R.id.widget_item_low_textview, lowString);
+        }
+
+
 
     }
 

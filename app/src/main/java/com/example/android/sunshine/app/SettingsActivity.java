@@ -50,7 +50,6 @@ public class SettingsActivity extends PreferenceActivity
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
     }
 
-
     public static class MyPreferenceFragment extends PreferenceFragment {
         @Override
         public void onCreate(final Bundle savedInstanceState) {

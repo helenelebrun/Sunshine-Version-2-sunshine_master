@@ -10,13 +10,17 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.Toast;
 
 /**
  * Created by TheFrenchOne on 12/6/2016.
  */
 public class LocationDialogPreference extends DialogPreference {
 
-
+    private static final double MIN_LONGITUDE = -180;
+    private static final double MAX_LONGITUDE = 180;
+    private static final double MAX_LATITUDE = 90;
+    private static final double MIN_LATITUDE = -90;
     private EditText txtLongitude;
     private EditText txtLatitude;
 
@@ -43,6 +47,18 @@ public class LocationDialogPreference extends DialogPreference {
         return view;
     }
 
+    private boolean checkLocationIsValid(){
+        return checkValueOfLatitudeIsValid() && checkValueOfLongitudeIsValid();
+    }
+    private boolean checkValueOfLongitudeIsValid(){
+
+        return longitude <= MAX_LONGITUDE && longitude >= MIN_LONGITUDE;
+    }
+
+    private boolean checkValueOfLatitudeIsValid(){
+        return latitude <= MAX_LATITUDE && latitude >= MIN_LATITUDE;
+    }
+
     @Override
     public void onDismiss(DialogInterface dialog) {
         longitude = Double.parseDouble(txtLongitude.getText().toString());
@@ -55,11 +71,19 @@ public class LocationDialogPreference extends DialogPreference {
         super.onDialogClosed(positiveResult);
 
         if (positiveResult) {
-            SharedPreferences.Editor editor = getEditor();
-            Resources res = getContext().getResources();
-            editor.putString(res.getString(R.string.pref_longitude_key), txtLongitude.getText().toString());
-            editor.putString(res.getString(R.string.pref_latitude_key), txtLatitude.getText().toString());
-            editor.commit();
+
+            if(checkLocationIsValid())
+            {
+                SharedPreferences.Editor editor = getEditor();
+                Resources res = getContext().getResources();
+                editor.putString(res.getString(R.string.pref_longitude_key), txtLongitude.getText().toString());
+                editor.putString(res.getString(R.string.pref_latitude_key), txtLatitude.getText().toString());
+                editor.commit();
+            }
+            else{
+                Toast toast = Toast.makeText(getContext(), R.string.invalid_coordinates, Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 

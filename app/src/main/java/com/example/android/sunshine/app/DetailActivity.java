@@ -15,7 +15,10 @@
  */
 package com.example.android.sunshine.app;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -109,5 +112,13 @@ public class DetailActivity extends AppCompatActivity {
             ft.attach(df);
             ft.commit();
         }
+
+        Intent intent = new Intent(getApplicationContext(), SunShineWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(this, SunShineWidget.class));
+        widgetManager.notifyAppWidgetViewDataChanged(ids, android.R.id.list);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }
