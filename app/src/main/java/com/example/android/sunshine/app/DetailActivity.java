@@ -41,6 +41,16 @@ public class DetailActivity extends AppCompatActivity {
         maListe = liste;
     }
 
+    private static List<Temperature> temperatures = new ArrayList<>();
+
+    public static List<Temperature> getListTemperatures() {
+        return temperatures;
+    }
+
+    public void setListTemperatures(List<Temperature> liste) {
+        temperatures = liste;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +72,7 @@ public class DetailActivity extends AppCompatActivity {
 
             Bundle extras = getIntent().getExtras();
             setMaListe(extras.<Temperature>getParcelableArrayList("listTemp"));
+            setListTemperatures(extras.<Temperature>getParcelableArrayList("listTemp"));
         }
     }
 

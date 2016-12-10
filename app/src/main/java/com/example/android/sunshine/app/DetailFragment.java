@@ -57,6 +57,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -126,7 +127,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private List<TextView> degresHigh = new ArrayList<>();
 
     private List<Temperature> maListe;
-    private List<Temperature> listGraph;
+    //private List<Temperature> listGraph;
 
     private long dateAujourdhui;
 
@@ -136,6 +137,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private Rectangle rectangleGraphic;
 
     private int noJourneeClickPrec = 0;
+
+    private double[] temperaturesMin = new double[7];
+    private double[] temperaturesMax = new double[7];
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -162,8 +166,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         mWindView = (TextView) rootView.findViewById(R.id.detail_wind_textview);
         mPressureView = (TextView) rootView.findViewById(R.id.detail_pressure_textview);
 
-        maListe = DetailActivity.getMaListe();
-        listGraph = new ArrayList<>(maListe);
+        //maListe = DetailActivity.getMaListe();
+        //listGraph = new ArrayList<>(maListe);
 
         dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date1));
         dates.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_date2));
@@ -181,9 +185,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre6_low));
         degresLow.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_low));
 
-        for (int i = 0; i < degresLow.size(); i++) {
-            degresLow.get(i).setText(String.format("%.1f",maListe.get(i).low) + "°");
-        }
+        //for (int i = 0; i < degresLow.size(); i++) {
+        //    degresLow.get(i).setText(String.format("%.1f",maListe.get(i).low) + "°");
+        //}
 
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre1_high));
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre2_high));
@@ -193,9 +197,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre6_high));
         degresHigh.add((TextView) rootView.findViewById(R.id.fragment_detail_textView_degre7_high));
 
-        for (int i = 0; i < degresHigh.size(); i++) {
-            degresHigh.get(i).setText(String.format("%.1f",listGraph.get(i).high) + "°");
-        }
+        //for (int i = 0; i < degresHigh.size(); i++) {
+        //    degresHigh.get(i).setText(String.format("%.1f",maListe.get(i).high) + "°");
+        //}
 
         couleurMin = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMin);
         couleurMax = (LinearLayout) rootView.findViewById(R.id.fragment_detail_relativeLayout_colorMax);
@@ -410,13 +414,16 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void setTemperatureLabelsForWeek(int indexSemaine) {
 
-        int weatherId = listGraph.get(indexSemaine).weatherId;
+        maListe = DetailActivity.getMaListe();
+        List<Temperature> listeTemp = new ArrayList<>(maListe);
+
+        int weatherId = listeTemp.get(indexSemaine).weatherId;
 
         mIconView.setBackgroundResource(Utility.getArtResourceForWeatherCondition(weatherId));
         AnimationDrawable animation = (AnimationDrawable) mIconView.getBackground();
         animation.start();
 
-        dateAujourdhui = listGraph.get(indexSemaine).date;
+        dateAujourdhui = listeTemp.get(indexSemaine).date;
         String friendlyDateText = Utility.getDayName(getActivity(), dateAujourdhui);
         String dateText = Utility.getFormattedMonthDay(getActivity(), dateAujourdhui);
         mFriendlyDateView.setText(friendlyDateText);
@@ -427,25 +434,25 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         mIconView.setContentDescription(description);
 
-        double high = listGraph.get(indexSemaine).high;
+        double high = temperaturesMax[indexSemaine];
         String highString = Utility.formatTemperature(getActivity(), high);
         mHighTempView.setText(highString);
 
-        double low = listGraph.get(indexSemaine).low;
+        double low = temperaturesMin[indexSemaine];
         String lowString = Utility.formatTemperature(getActivity(), low);
         mLowTempView.setText(lowString);
 
-        float humidity = listGraph.get(indexSemaine).humidity;
+        float humidity = listeTemp.get(indexSemaine).humidity;
         mHumidityView.setText(getActivity().getString(R.string.format_humidity, humidity));
 
-        float windSpeedStr = listGraph.get(indexSemaine).windSpeed;
-        float windDirStr = listGraph.get(indexSemaine).degrees;
+        float windSpeedStr = listeTemp.get(indexSemaine).windSpeed;
+        float windDirStr = listeTemp.get(indexSemaine).degrees;
         mWindView.setText(Utility.getFormattedWind(getActivity(), windSpeedStr, windDirStr));
 
-        float pressure = listGraph.get(indexSemaine).pressure;
+        float pressure = listeTemp.get(indexSemaine).pressure;
         mPressureView.setText(getActivity().getString(R.string.format_pressure, pressure));
 
-        mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
+        //mForecast = String.format("%s - %s - %s/%s", dateText, description, high, low);
 
         rectangleGraphic.invalidate();
     }
@@ -467,6 +474,11 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             maListe = DetailActivity.getMaListe();
             temperatures = new ArrayList<>(maListe);
+
+            for (int i = 0; i < temperatures.size(); i++) {
+                temperaturesMin[i] = temperatures.get(i).low;
+                temperaturesMax[i] = temperatures.get(i).high;
+            }
 
             paintLow.setColor(Color.BLUE);
             paintLow.setAlpha(255);
@@ -648,6 +660,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             int y;
 
             for (int i = 0; i < degresLow.size(); i++) {
+                degresLow.get(i).setText(String.format("%.1f",temperaturesMin[i]) + "°");
                 y = ((int) getYPos(temperatures.get(i).low, tempMaxY, viewPort, padding)) + 10;
                 degresLow.get(i).setX(x);
                 degresLow.get(i).setY(y);
@@ -663,6 +676,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             x = graphicWidth / 21;
 
             for (int i = 0; i < degresHigh.size(); i++) {
+                degresHigh.get(i).setText(String.format("%.1f",temperaturesMax[i]) + "°");
                 y = ((int) getYPos(temperatures.get(i).high, tempMaxY, viewPort, padding)) + 10;
 
                 degresHigh.get(i).setX(x);
