@@ -662,7 +662,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             for (int i = 0; i < degresLow.size(); i++) {
 
                 double min = temperaturesMin[i];
-                String minString = Utility.formatTemperature(getActivity(), min);
+                String minString = Utility.formatTemperatureGraphic(getActivity(), min);
                 degresLow.get(i).setText(minString);
 
                 y = ((int) getYPos(temperatures.get(i).low, tempMaxY, viewPort, padding)) + 10;
@@ -682,7 +682,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             for (int i = 0; i < degresHigh.size(); i++) {
 
                 double high = temperaturesMax[i];
-                String highString = Utility.formatTemperature(getActivity(), high);
+                String highString = Utility.formatTemperatureGraphic(getActivity(), high);
                 degresHigh.get(i).setText(highString);
 
                 y = ((int) getYPos(temperatures.get(i).high, tempMaxY, viewPort, padding)) + 10;

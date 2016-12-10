@@ -10,6 +10,7 @@
     <string name="format_notification">Prévision: <xliff:g id="condition">%1$s</xliff:g> Maximum: <xliff:g id="high">%2$s</xliff:g> Minimum: <xliff:g id="low">%3$s</xliff:g></string>
     <string name="format_pressure">Pression: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
     <string name="format_temperature"><xliff:g id="temp">%1.0f</xliff:g>\u00B0</string>
+    <string name="format_temperature_graphic"><xliff:g id="temp">%.1f</xliff:g>\u00B0</string>
     <string name="format_wind_kmh">Vent: <xliff:g id="speed">%1$1.0f</xliff:g> km/h <xliff:g id="direction">%2$s</xliff:g></string>
     <string name="format_wind_mph">Vent: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
     <string name="pref_enable_notifications_true">Activé</string>
